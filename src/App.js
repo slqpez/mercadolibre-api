@@ -2,12 +2,14 @@ import "./App.css";
 import productsService from "./services/products.service.js"
 import sellerService from "./services/seller.service.js"
 import {useState, useEffect} from 'react'
+import axios from "axios";
 
-function App() {
+  function App() {
   const [searchValue, setSearchValue] =useState('')
   const [productToSearch, setProductToSearch] =useState('')
   const [products, setProducts] = useState([])
-  const [nickname, setNickName] = useState("")
+  const [idSellers, setIdSellers] = useState([])
+  const [nickNames, setNickNames] = useState([])
 
 
   const handleOnChangeSearch = (e)=>{
@@ -19,23 +21,43 @@ function App() {
     e.preventDefault();
     setProductToSearch(searchValue)
   }
-
-   useEffect(()=>{
-    sellerService.getSellerNick(78429260).then(result =>{
-      setNickName(result.data.nickname) 
-    })
-  },[]) 
-
-  console.log(nickname)
-
-   useEffect(() => {
+  
+    useEffect(() => {
     productsService.getProducts(productToSearch)
     .then(result => {
-      console.log(result.data.results)
-      setProducts(result.data.results)
+      let resultProducts = result.data.results
+     resultProducts.forEach(product=> sellerService.getSellerNick(product.seller.id)
+      .then(result=>{
+        const newResult = resultProducts.map(newProduct=>{
+          newProduct.seller.id = result.data.nickname 
+          return newProduct
+        })
+         
+        setProducts(newResult)
+         
+      }))    
+      
     })
   },[productToSearch]) 
+ 
 
+
+  /* products.forEach(product=>{
+    console.log(product.seller.id)
+  }) */
+   /* let ids =products.map(product => product.seller.id) 
+    
+   useEffect(() => {
+    setNickNames(ids.map(async id=>{
+      const results = await sellerService.getSellerNick(id)
+      const nicks = await results.data.nickname
+      return nicks 
+    }))
+   
+  },[ids])  
+
+
+console.log(nickNames)  */
 
   return (
     <div className="App">
@@ -47,14 +69,14 @@ function App() {
 
     {products.map(product=> {
       return(
+        
         <div key={product.id}>
         <img src={product.thumbnail} alt="Product" width="200" height="200" loading="lazy"></img>
         <p>{product.title}</p>
         <p>{product.price}</p>
         <p>{product.seller.id}</p>
-         {/*  <p>{sellerService.getSellerNick(product.seller.id).then(result=>{
-           return result.data.nickname
-         })}</p>  */}
+         
+       
          
       </div>
       )  
