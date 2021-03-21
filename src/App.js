@@ -62,7 +62,7 @@ function App() {
     setBtnValues(newValues)
   };
 
-  console.log(offset)
+  //console.log(offset)
   useEffect(() => {
     productsService.getProductsByName("oferta", offset).then((result) => {
       setProductsRandom(result.data.results);
