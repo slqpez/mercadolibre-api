@@ -1,0 +1,15 @@
+.footer{
+    background:#FFF159;
+    height:100px;
+    padding:20px;
+    position:relative;
+    width:100%;
+    bottom:0;
+}
+
+.footer-text{
+    color:rgb(60, 90, 173);
+    font-weight: bold;
+    position:absolute;
+    bottom:0;
+}

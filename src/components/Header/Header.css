@@ -1,0 +1,17 @@
+.header{
+ background: #FFF159;
+ display:flex;
+ justify-content: space-between;
+ padding:20px;
+ align-items:center;
+}
+
+.logo{
+    width:90px;
+    height:80px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+}

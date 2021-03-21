@@ -2,14 +2,18 @@ import "./App.css";
 import productsService from "./services/products.service.js"
 import sellerService from "./services/seller.service.js"
 import {useState, useEffect} from 'react'
-import axios from "axios";
+import Card from "./components/Card/Card"
+import Header from "./components/Header/Header"
+import ButtonsPag from "./components/ButtonsPag/ButtonsPag"
+import Footer from "./components/Footer/Footer"
+
 
   function App() {
   const [searchValue, setSearchValue] =useState('')
   const [productToSearch, setProductToSearch] =useState('')
   const [products, setProducts] = useState([])
-  const [idSellers, setIdSellers] = useState([])
-  const [nickNames, setNickNames] = useState([])
+  const [nick, setNick] = useState([])
+  const [clicked, setClicked] = useState(false)
 
 
   const handleOnChangeSearch = (e)=>{
@@ -20,67 +24,40 @@ import axios from "axios";
   const handleSubmit = (e)=>{
     e.preventDefault();
     setProductToSearch(searchValue)
+    setSearchValue("")
+    setClicked(true)
   }
   
     useEffect(() => {
     productsService.getProducts(productToSearch)
-    .then(result => {
+    .then( result => {
       let resultProducts = result.data.results
-     resultProducts.forEach(product=> sellerService.getSellerNick(product.seller.id)
-      .then(result=>{
-        const newResult = resultProducts.map(newProduct=>{
-          newProduct.seller.id = result.data.nickname 
-          return newProduct
-        })
-         
-        setProducts(newResult)
-         
-      }))    
-      
-    })
-  },[productToSearch]) 
- 
-
-
-  /* products.forEach(product=>{
-    console.log(product.seller.id)
-  }) */
-   /* let ids =products.map(product => product.seller.id) 
+      setProducts (resultProducts.map( product=> {
+       sellerService.getSellerNick(product.seller.id)
+      .then( result=>{
+        product.seller.id =  result.data.nickname  //TODO El nickname aparace después del segundo re-render.
+      })
+      return product
+     }))
     
-   useEffect(() => {
-    setNickNames(ids.map(async id=>{
-      const results = await sellerService.getSellerNick(id)
-      const nicks = await results.data.nickname
-      return nicks 
-    }))
-   
-  },[ids])  
+    }).catch(error=> console.log("Cojí el error", error))  //TODO mostar un mensaje si no se encunetran elementos.
+  },[productToSearch]) 
 
 
-console.log(nickNames)  */
-
+  //products.forEach(product => console.log(product.seller.id))
+ 
+ 
+    
   return (
     <div className="App">
-      <h1>Mercado López</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="search" onChange={handleOnChangeSearch} value={searchValue}></input>
-      </form>
-      
-
-    {products.map(product=> {
-      return(
-        
-        <div key={product.id}>
-        <img src={product.thumbnail} alt="Product" width="200" height="200" loading="lazy"></img>
-        <p>{product.title}</p>
-        <p>{product.price}</p>
-        <p>{product.seller.id}</p>
-         
-       
-         
+      <Header className="header" handleSubmit={handleSubmit} handleOnChangeSearch={handleOnChangeSearch} searchValue={searchValue}></Header>
+     
+      <div className="grid-cards">
+      {products.map(product=>  <Card key={product.id} img={product.thumbnail} title={product.title} price={product.price} seller={product.seller.id}></Card>)}
       </div>
-      )  
-    })}
+      {clicked?<ButtonsPag></ButtonsPag>:null}
+      <Footer className="footer"></Footer>
+
     </div>
   );
 
