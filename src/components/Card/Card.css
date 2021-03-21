@@ -30,4 +30,5 @@ p{
 .seller{
     font-size: .7em;
     color: rgb(124, 121, 121);
+    word-wrap: break-word;
 }

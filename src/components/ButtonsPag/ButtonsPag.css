@@ -11,3 +11,12 @@ button{
     cursor: pointer;
     font-weight: 700;
 }
+
+button:focus{
+    outline: none;
+}
+
+button:hover{
+    background:rgb(148, 148, 170);
+    color: white;
+}

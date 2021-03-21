@@ -2,8 +2,11 @@ import axios from 'axios'
 
 
 
-const getProducts =(product="", offset=0)=>{
+const getProductsByName =(product="oferta", offset=0)=>{
     return axios.get(`https://api.mercadolibre.com/sites/MCO/search?q=${product}&paging&offset=${offset}`)
 }
 
-export default {getProducts};
+
+
+export default {getProductsByName};
+
