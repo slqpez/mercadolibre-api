@@ -7,11 +7,12 @@ import Header from "./components/Header/Header";
 import ButtonsPag from "./components/ButtonsPag/ButtonsPag";
 import Footer from "./components/Footer/Footer";
 
+
 function App() {
   const initialBtnValues = {
-    value1: 1,
-    value2: 2,
-    value3: 3,
+    value1: 0,
+    value2: 1,
+    value3: 2,
   };
 
   const [searchValue, setSearchValue] = useState("");
@@ -21,6 +22,8 @@ function App() {
   const [producstRandom, setProductsRandom] = useState([]);
   const [btnValues, setBtnValues] = useState(initialBtnValues);
   const [offset, setOffset] = useState(0);
+  const [isclicked, setIsClicked] =useState(false)
+  const [limit, setLimit] = useState(0)
 
   const handleOnChangeSearch = (e) => {
     setSearchValue(e.target.value);
@@ -60,12 +63,33 @@ function App() {
       value3: btnValues.value3 + 1
     }
     setBtnValues(newValues)
+    setIsClicked(true)
   };
+  const handleBefore = (e) => {
+    e.preventDefault();
+    setOffset((btnValues.value1 - 1)*50)
+    const newValues={
+      value1: btnValues.value1 - 1,
+      value2: btnValues.value2 - 1,
+      value3: btnValues.value3 - 1
+    }
+    setBtnValues(newValues)
+  };
+
+  const handleCardClick =(e)=>{
+    e.stopPropagation();
+    if(e.target !== this){
+      console.log(e.currentTarget.getAttribute("data-id"))
+    }
+    
+  }
 
   //console.log(offset)
   useEffect(() => {
     productsService.getProductsByName("oferta", offset).then((result) => {
       setProductsRandom(result.data.results);
+      setLimit(result.data.paging.primary_results)
+     
     });
   }, [offset]);
 
@@ -83,10 +107,10 @@ function App() {
           })
         );
       })
-      .catch((error) => console.log("Cojí el error", error)); //TODO mostar un mensaje si no se encunetran elementos.
+      .catch((error) => console.error("Cojí el error", error)); //TODO mostar un mensaje si no se encunetran elementos.
   }, [productToSearch, offset]);
 
-  console.log(offset)
+
 
   return (
     <div className="App">
@@ -96,12 +120,13 @@ function App() {
         handleOnChangeSearch={handleOnChangeSearch}
         searchValue={searchValue}
       ></Header>
-
-      <div className="grid-cards">
+          <div className="grid-cards">
         {!submited
           ? producstRandom.map((product) => (
               <Card
                 key={product.id}
+                id={product.id}
+                handleCardClick={handleCardClick}
                 img={product.thumbnail}
                 title={product.title}
                 price={product.price}
@@ -117,7 +142,7 @@ function App() {
                 seller={product.seller.id}
               ></Card>
             ))}
-      </div>
+      </div> 
       <ButtonsPag
         value1={btnValues.value1}
         value2={btnValues.value2}
@@ -126,6 +151,10 @@ function App() {
         handleBtn2={handleBtn2}
         handleBtn3={handleBtn3}
         handleNext={handleNext}
+        isclicked={isclicked}
+        handleBefore={handleBefore}
+        limit={limit}
+        count={offset}
       ></ButtonsPag>
       <Footer className="footer"></Footer>
     </div>
