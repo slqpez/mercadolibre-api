@@ -7,7 +7,7 @@ const getProductsByName =(product="oferta", offset=0)=>{
 }
 
 const getProductById =(id)=>{
-    return axios.get(`https://api.mercadolibre.com/items/MCO467792288`)
+    return axios.get(`https://api.mercadolibre.com/items/${id}`)
 }
 
 

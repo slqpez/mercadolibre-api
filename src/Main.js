@@ -9,7 +9,7 @@ const Main = () => {
     return (
         <BrowserRouter>
             <Route exact path="/"><App></App></Route>
-            <Route exact path="/item"><Item></Item></Route>
+            <Route  path="/item:id"><Item></Item></Route>
         </BrowserRouter>
     )}
 

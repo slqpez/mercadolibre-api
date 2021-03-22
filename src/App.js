@@ -8,6 +8,7 @@ import ButtonsPag from "./components/ButtonsPag/ButtonsPag";
 import Footer from "./components/Footer/Footer";
 
 
+
 function App() {
   const initialBtnValues = {
     value1: 0,
@@ -107,7 +108,7 @@ function App() {
           })
         );
       })
-      .catch((error) => console.error("Cojí el error", error)); //TODO mostar un mensaje si no se encunetran elementos.
+      .catch((error) => console.error("Error", error)); //TODO mostar un mensaje si no se encunetran elementos.
   }, [productToSearch, offset]);
 
 
@@ -135,6 +136,7 @@ function App() {
             ))
           : products.map((product) => (
               <Card
+               id={product.id}
                 key={product.id}
                 img={product.thumbnail}
                 title={product.title}

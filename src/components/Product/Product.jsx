@@ -1,16 +1,11 @@
 import React from "react";
-import "./Card.css";
-import { Link } from "react-router-dom";
+import "./Product.css"
+const Product = ({ img, title, price, seller, id }) => {
 
-
-
-const Card = ({ img, title, price, seller, id, handleCardClick }) => {
   return (
-     <Link
-      to={`./item:${id}`}
-      className="card"
+     <div
+      className="card-product"
       data-id={id}
-      onClick={handleCardClick}
     >
       <img className="img" src={img} alt="Product" loading="lazy"></img>
 
@@ -24,11 +19,11 @@ const Card = ({ img, title, price, seller, id, handleCardClick }) => {
       <p className="title">{title}</p>
       <p className="seller">{seller}</p>
      
-    </Link> 
+    </div> 
   
 );
 
   
 };
 
-export default Card;
+export default Product;
