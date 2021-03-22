@@ -7,7 +7,7 @@ const ButtonsPag=({value1, value2,value3, handleBtn1, handleBtn2, handleBtn3, ha
         <button onClick={handleBtn1}>{value1}</button>
         <button onClick={handleBtn2}>{value2}</button>
         <button onClick={handleBtn3}>{value3}</button>
-        {count<limit?<button onClick={handleNext}>Siguiente</button>:null}
+        {count<limit && value3 <=20?<button onClick={handleNext}>Siguiente</button>:null}
       </div>
     )
 }

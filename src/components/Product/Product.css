@@ -48,3 +48,15 @@ span{
     width:160px;
     height:160px;
 }
+
+@media (max-width:500px){
+    .card-product{
+        width:270px
+    }
+    h3{
+        font-size: .7em;
+    }
+    span{
+        font-size: .6em;
+    }
+}

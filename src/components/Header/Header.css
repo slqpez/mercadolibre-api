@@ -15,3 +15,22 @@
     display:flex;
     align-items:center;
 }
+
+
+@media (max-width: 768px){
+    .textBrand{
+        width:150px;
+    }
+}
+
+@media (max-width: 540px){
+    .textBrand{
+        width:100px;
+    }
+}
+
+@media (max-width: 450px){
+    .textBrand{
+        display:none;
+    }
+}

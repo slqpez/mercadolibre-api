@@ -3,6 +3,7 @@ import Header from "../Header/Header";
 import { useEffect, useState } from "react";
 import productsService from "../../services/products.service";
 import Product from "../Product/Product";
+import Footer from "../Footer/Footer";
 import "./Item.css";
 
 const Item = () => {
@@ -20,7 +21,7 @@ const Item = () => {
 
   console.log(product)
   return (
-    <div>
+    <div className="item">
       <Header className="header"></Header>
       <Product
         img={product.thumbnail}
@@ -29,6 +30,8 @@ const Item = () => {
         seller={product.seller_id}
         attributes={product.attributes}
       ></Product>
+
+      <Footer></Footer>
     </div>
   );
 };

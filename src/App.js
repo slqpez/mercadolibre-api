@@ -7,8 +7,6 @@ import Header from "./components/Header/Header";
 import ButtonsPag from "./components/ButtonsPag/ButtonsPag";
 import Footer from "./components/Footer/Footer";
 
-
-
 function App() {
   const initialBtnValues = {
     value1: 0,
@@ -20,11 +18,12 @@ function App() {
   const [productToSearch, setProductToSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [submited, setSubmited] = useState(false);
-  const [producstRandom, setProductsRandom] = useState([]);
+  const [productsRandom, setProductsRandom] = useState([]);
   const [btnValues, setBtnValues] = useState(initialBtnValues);
   const [offset, setOffset] = useState(0);
-  const [isclicked, setIsClicked] =useState(false)
-  const [limit, setLimit] = useState(0)
+  const [isclicked, setIsClicked] = useState(false);
+  const [limit, setLimit] = useState(0);
+
 
   const handleOnChangeSearch = (e) => {
     setSearchValue(e.target.value);
@@ -39,59 +38,72 @@ function App() {
 
   const handleBtn1 = (e) => {
     e.preventDefault();
-    let value= parseInt(e.target.innerHTML)
-    setOffset(value*50)
+    let value = parseInt(e.target.innerHTML);
+    setOffset(value * 50);
+    window.scrollTo(0, 0)
   };
 
   const handleBtn2 = (e) => {
     e.preventDefault();
-    let value= parseInt(e.target.innerHTML)
-    setOffset(value*50)
+    let value = parseInt(e.target.innerHTML);
+    setOffset(value * 50);
+    window.scrollTo(0, 0)
   };
 
   const handleBtn3 = (e) => {
     e.preventDefault();
-    let value= parseInt(e.target.innerHTML)
-    setOffset(value*50)
+    let value = parseInt(e.target.innerHTML);
+    setOffset(value * 50);
+    window.scrollTo(0, 0)
   };
 
   const handleNext = (e) => {
     e.preventDefault();
-    setOffset((btnValues.value3 + 1)*50)
-    const newValues={
+    setOffset((btnValues.value3 + 1) * 50);
+    const newValues = {
       value1: btnValues.value1 + 1,
       value2: btnValues.value2 + 1,
-      value3: btnValues.value3 + 1
-    }
-    setBtnValues(newValues)
-    setIsClicked(true)
+      value3: btnValues.value3 + 1,
+    };
+    setBtnValues(newValues);
+    setIsClicked(true);
+    window.scrollTo(0, 0)
   };
   const handleBefore = (e) => {
     e.preventDefault();
-    setOffset((btnValues.value1 - 1)*50)
-    const newValues={
+    setOffset((btnValues.value1 - 1) * 50);
+    const newValues = {
       value1: btnValues.value1 - 1,
       value2: btnValues.value2 - 1,
-      value3: btnValues.value3 - 1
-    }
-    setBtnValues(newValues)
+      value3: btnValues.value3 - 1,
+    };
+    setBtnValues(newValues);
+    window.scrollTo(0, 0)
   };
 
-  const handleCardClick =(e)=>{
+  const handleCardClick = (e) => {
     e.stopPropagation();
-    if(e.target !== this){
-      console.log(e.currentTarget.getAttribute("data-id"))
+    if (e.target !== this) {
+      console.log(e.currentTarget.getAttribute("data-id"));
     }
-    
-  }
+  };
 
-  //console.log(offset)
   useEffect(() => {
+
     productsService.getProductsByName("oferta", offset).then((result) => {
-      setProductsRandom(result.data.results);
-      setLimit(result.data.paging.primary_results)
+      let products = result.data.results;
+      let newProducts = products.map((product) => {
+        sellerService.getSellerNick(product.seller.id).then((result) => {  
+            product.seller.id =result.data.nickname;
+        }); 
+        return product;
+      }); 
      
+      setProductsRandom(newProducts);
+      setLimit(result.data.paging.primary_results);
     });
+
+    
   }, [offset]);
 
   useEffect(() => {
@@ -99,31 +111,35 @@ function App() {
       .getProductsByName(productToSearch, offset)
       .then((result) => {
         let resultProducts = result.data.results;
-        setProducts(
-          resultProducts.map((product) => {
-            sellerService.getSellerNick(product.seller.id).then((result) => {
-              product.seller.id = result.data.nickname; //TODO El nickname aparace después del segundo re-render.
-            });
-            return product;
-          })
-        );
+        let newResults = resultProducts.map((product) => {
+          sellerService.getSellerNick(product.seller.id).then((result) => {
+
+            product.seller.id  = result.data.nickname;
+            
+          });
+          return product;
+        });
+        
+        setProducts(newResults);
       })
       .catch((error) => console.error("Error", error)); //TODO mostar un mensaje si no se encunetran elementos.
   }, [productToSearch, offset]);
 
-
+  
 
   return (
     <div className="App">
+   
+
       <Header
         className="header"
         handleSubmit={handleSubmit}
         handleOnChangeSearch={handleOnChangeSearch}
         searchValue={searchValue}
       ></Header>
-          <div className="grid-cards">
+      <div className="grid-cards">
         {!submited
-          ? producstRandom.map((product) => (
+          ? productsRandom.map((product) => (
               <Card
                 key={product.id}
                 id={product.id}
@@ -136,7 +152,7 @@ function App() {
             ))
           : products.map((product) => (
               <Card
-               id={product.id}
+                id={product.id}
                 key={product.id}
                 img={product.thumbnail}
                 title={product.title}
@@ -144,7 +160,7 @@ function App() {
                 seller={product.seller.id}
               ></Card>
             ))}
-      </div> 
+      </div>
       <ButtonsPag
         value1={btnValues.value1}
         value2={btnValues.value2}
